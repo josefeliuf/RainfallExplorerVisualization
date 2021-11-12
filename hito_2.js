@@ -10,6 +10,11 @@ const margin = {
 };
 
 let estaciones_seleccionadas = []
+let activeCircles = []
+let escalaX;
+let escalaY;
+let proyeccion;
+let transformacion;
 
 
 const svg_1 = d3.select('.map-container')
@@ -49,7 +54,7 @@ const btnSeleccionar = selectContainer
 
 const chart = svg_2.append("g")
                     .attr('id', 'line-chart-container')
-                    .attr('transform', `translate(${margin.left}, ${margin.top})`);
+                    .attr('transform', `translate(${margin.left}, ${margin.top - 15})`);
 
 const contenedorEjex = svg_2.append("g")
                                 .attr("class", "eje")
@@ -57,7 +62,7 @@ const contenedorEjex = svg_2.append("g")
 
 const contenedorEjey = svg_2.append("g")
                                 .attr("class", "eje")
-                                .attr('transform', `translate(${margin.left}, ${margin.top})`);
+                                .attr('transform', `translate(${margin.left}, ${margin.top - 15})`);
 
 const colorScale = d3.scaleOrdinal()
 
@@ -69,62 +74,59 @@ async function loadData() {
     return {estaciones, regiones};
 }
 
-let proyeccion;
-let transformacion;
-let activeCircles = []
 loadData().then(({estaciones, regiones}) => {
 
     proyeccion = d3.geoMercator().fitSize([width_map, height_map], regiones);
     const caminosGeo = d3.geoPath().projection(proyeccion);
+    
+    initSelectorEstaciones(estaciones)
+    joinRegions(regiones, caminosGeo);
+    joinStations(estaciones, proyeccion);
+})
 
+function initSelectorEstaciones(estaciones) {
     selectorEstaciones.selectAll("option")
                         .data(estaciones)
                         .join("option")
                         .attr("value", (d) => d.nombre)
                         .text((d) => d.nombre);
 
-    // selectorEstaciones
-    //                 .on("change", (e) => {
-    //                     const valorActual = selectorEstaciones.node().value;
-    //                     handleEstacionZoom(valorActual)
-    //                 })
-                     
-
-    // createLineChart(estaciones, estaciones_seleccionadas);
-    joinRegions(regiones, caminosGeo);
-    joinStations(estaciones, proyeccion);
+    selectorEstaciones
+                    .on("change", (e) => {
+                        const valorActual = selectorEstaciones.node().value;
+                        handleEstacionZoom(valorActual)
+                    })
 
     btnSeleccionar
                 .on("click", (e) => {
-                    const valorActual = selectorEstaciones.node().value;
-                    if (!estaciones_seleccionadas.includes(valorActual)) {
-                        if (estaciones_seleccionadas.length < 5) {
-                            estaciones_seleccionadas.push(valorActual)
-                            createLineChart(estaciones, estaciones_seleccionadas)
-                        } else {
-                            console.log('No puedes añadir más estaciones al gráfico, estaciones selecionadas: ' + estaciones_seleccionadas.length)
-                        }
-                    } else {
-                        console.log("La estación ya está seleccionada")
-                    }
+                    onBtnSeleccionarClicked(estaciones)
                 })
-})
+}
 
-let escalaX;
-let escalaY;
-
-function handleEstacionZoom(estacion) {
-    let circle = stationsContainer.select()
-    const transformacion = d3.zoomIndentity.scale(4).translate()
+function onBtnSeleccionarClicked(estaciones) {
+    const valorActual = selectorEstaciones.node().value;
+    if (!estaciones_seleccionadas.includes(valorActual)) {
+        if (estaciones_seleccionadas.length < 5) {
+            estaciones_seleccionadas.push(valorActual)
+            createLineChart(estaciones, estaciones_seleccionadas)
+        } else {
+            console.log('No puedes añadir más estaciones al gráfico, estaciones selecionadas: ' + estaciones_seleccionadas.length)
+        }
+    } else {
+        console.log("La estación ya está seleccionada")
+    }
 
 }
 
-function createLineChart(estaciones, estaciones_seleccionadas) {
 
-    const precipitacionesEstaciones = estaciones.filter((estacion) => estaciones_seleccionadas.includes(estacion.nombre));
+function handleEstacionZoom(estacion) {
+    console.log("handleZoomToCircle when a station is selected, station: " + estacion)
+    // let circle = stationsContainer.select()
+    // const transformacion = d3.zoomIndentity.scale(4).translate()
 
-    colorScale.domain(estaciones_seleccionadas).range(d3.schemePaired);
-    
+}
+
+function getMaxAttribute(precipitacionesEstaciones) {
     let maxAttrY = 0
     precipitacionesEstaciones.forEach(estacion => {
         let max = d3.max(estacion.precipitaciones, (d) => d.valor)
@@ -132,6 +134,17 @@ function createLineChart(estaciones, estaciones_seleccionadas) {
             maxAttrY = max
         }
     });
+    return maxAttrY
+}
+
+function createLineChart(estaciones, estaciones_seleccionadas) {
+
+    const precipitacionesEstaciones = estaciones.filter((estacion) => estaciones_seleccionadas.includes(estacion.nombre));
+
+    //define colorScale for lines
+    colorScale.domain(estaciones_seleccionadas).range(d3.schemePaired);
+    
+    let maxAttrY = getMaxAttribute(precipitacionesEstaciones)
 
     escalaX = d3
                 .scaleBand()
@@ -323,8 +336,6 @@ const zoom = d3
             [width_map, height_map],
         ])
         .scaleExtent([1, 10])
-        .on("start", () => console.log("empecé"))
-        .on("zoom", manejadorZoom)
-        .on("end", () => console.log("terminé"));
+        .on("zoom", manejadorZoom);
 
 svg_1.call(zoom)
