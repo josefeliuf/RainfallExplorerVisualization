@@ -1,0 +1,93 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300&family=Roboto:wght@300&display=swap');
+
+.title {
+    text-align: center;
+    font-family: 'Roboto', sans-serif;
+    
+}
+
+.select-title {
+    font-family: 'Roboto', sans-serif;
+}
+
+.paragraph {
+    text-align: justify;
+    margin: 1em 25px;
+    font-family: 'Montserrat', sans-serif;
+
+}
+
+html, body {
+    height: 100%;
+    /* background-image: linear-gradient(moccasin, white); */
+    background-color: moccasin;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+.content {
+    display: flex;
+    flex: 1 0 auto;
+    padding: 20px;
+    column-count: 2;
+}
+
+.footer {
+    text-align: center;
+    flex-shrink: 0;
+    padding: 30px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.github-user {
+    text-decoration: none;
+}
+
+.title-chart-container {
+    width: 70%;
+    margin: 10px 50px 50px 50px;
+}
+
+.line-chart-container {
+    border-radius: 1%;
+    border-color: rgb(51, 51, 51);
+    border-style: solid;
+    background-color: whitesmoke;
+}
+
+.map-container {
+    width: 300px;
+    height: 600px;
+    border-radius: 1%;
+    border-color: rgb(51, 51, 51);
+    border-style: solid;
+    background-color: lightgray;
+    margin: 10px 50px 50px 50px;
+}
+
+.selector {
+    margin: 0px 10px 20px 0px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+button {
+    border-radius: 2em;
+    font-family: 'Montserrat', sans-serif;
+    border-style: solid;
+    background-color: lightskyblue;
+    border-color: black;
+    cursor: pointer;
+    box-shadow: 0px 3px #999;
+}
+
+button:active {
+    box-shadow: 0px 0px #666;
+    transform: translateY(1px);
+  }
+
+text {
+    font-family: 'Montserrat', sans-serif;
+}

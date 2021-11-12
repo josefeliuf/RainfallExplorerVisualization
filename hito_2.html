@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="./style.css">
+    <title>Evolución de precipitaciones en Chile</title>
+    <script defer src="https://use.fontawesome.com/releases/v5.15.4/js/all.js" integrity="sha384-rOA1PnstxnOBLzCLMcre8ybwbTmemjzdNlILg8O7z1lUkLXozs4DHonlDtnE7fpc" crossorigin="anonymous"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://d3js.org/d3-geo-projection.v4.min.js"></script>
+    <script src="https://unpkg.com/topojson-client@3"></script>
+</head>
+<body>
+    <header>
+        <h1 class="title">Explorador de precipitaciones 💧</h1>
+        <p class="paragraph">El explorador de precipitaciones es una herramienta que permite encontrar geográficamente
+            distintas estaciones de medición de precipitaciones en Chile, y permite ver su historial de 
+            registros de precipitaciones entre enero de 2016 y marzo de 2020. Los datos utilizados para esta
+            herramienta fueron obtenidos de <a href="https://www.cr2.cl/datos-de-precipitacion/">El Centro de Ciencia del Clima y la Resiliencia</a>
+            y luego fueron procesados.
+        </p>
+    </header>
+    <div class="content">
+
+        <div class="map-container">
+        </div>
+
+        <div class="title-chart-container">
+
+            <div class="select-container">
+
+                <h3 class="select-title">Busca un centro de medición en el mapa</h3>
+                <div class="select">
+                </div>
+
+            </div>
+
+            <div class="line-chart-container">
+            </div>
+
+        </div>
+
+    </div>
+    <div class="footer">Made with love <i class="far fa-heart"></i> by <a class="github-user" href="https://github.com/josefeliuf" target="_blank" >@josefeliuf</a> <i class="fab fa-github"></i></div>
+    <script src="./hito_2.js"></script>
+</body>
+</html>
